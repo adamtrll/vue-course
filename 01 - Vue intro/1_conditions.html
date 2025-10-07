@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue conditions</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ count }}
+        <span v-if="count < 5">
+            too low
+        </span>
+        <span v-else-if="5 <= count && count <= 10">
+            just right
+        </span>
+        <span v-else>
+            too high
+        </span>
+
+        <hr>
+
+        <p>
+            <template v-if="loading">
+                Loading... Please wait
+            </template>
+            <template v-else>
+                {{ message }}
+            </template>
+        </p>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue
+
+        const app = createApp({
+            setup() {
+                const count = ref(0)
+
+                // updating count value every 2 seconds
+                setInterval(() => {
+                    count.value = Math.floor((Math.random() * 20)) + 1
+                }, 2000)
+
+                //
+
+                const message = ref()
+                const loading = ref(true)
+
+                // Simulate server call
+                setTimeout(() => {
+                    loading.value = false
+                    message.value = 'Message from server'
+                }, 4000)
+
+                return {
+                    count,
+                    //
+                    loading,
+                    message,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>

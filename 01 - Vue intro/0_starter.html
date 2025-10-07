@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue intro</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+    </div>
+
+    <!-- Won't work outside of the app -->
+    {{ message }}
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue
+
+        const app = createApp({
+            setup() {
+                // "ref" is a reactive reference to a value
+                const message = ref('Hello World')
+
+                // message can be changed by overwritting the message.value property
+
+                // have to return variables and functions to be used in the template
+                return {
+                    message,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
