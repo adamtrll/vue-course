@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue events</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- v-on: can be combined with any html event -->
+        <a href="#" v-on:click="clicked = !clicked">
+            Click me!
+        </a>
+        <p>
+            <span v-if="clicked">
+                on
+            </span>
+            <span v-else>
+                off
+            </span>
+        </p>
+
+        <hr>
+
+        <p>
+            <a href="#" v-on:click="showAlert('Custom message')">
+                Show alert
+            </a>
+        </p>
+
+        <hr>
+
+        <p>
+            <!-- @click is a shorthand for v-on:click -->
+            <!-- .prevent is a modifier that prevents the default behavior of the event -->
+            <!-- other modifiers: https://vuejs.org/guide/essentials/event-handling#event-modifiers -->
+            <a href="#" @click.prevent="increment">
+                Increment
+            </a>
+        </p>
+        {{ count }}
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue
+
+        const app = createApp({
+            setup() {
+                const clicked = ref(false)
+
+                //
+
+                const showAlert = (message) => {
+                    alert(message)
+                }
+
+                const count = ref(0)
+                const increment = (e) => {
+                    // e is the event object
+                    console.log(e)
+                    // prevent default behavior of the event
+                    // e.preventDefault()
+
+                    count.value++
+                }
+
+                return {
+                    clicked,
+                    //
+                    showAlert,
+                    //
+                    count,
+                    increment,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
