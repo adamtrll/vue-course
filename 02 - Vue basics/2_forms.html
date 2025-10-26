@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Vue form handling</title>
 </head>
 
 <body>
@@ -14,6 +14,7 @@
                 <label for="">
                     Email Address
                 </label>
+                <!-- setup bidirectional binding between input and user.email -->
                 <input type="text" v-model="user.email">
             </p>
             <p>
@@ -30,7 +31,8 @@
         <hr>
 
         <p>
-            <label for="">
+            <label>
+                <!-- checkbox can be bound to a boolean value -->
                 <input type="checkbox" v-model="autoplay">
                 Autoplay is
                 <template v-if="autoplay">on</template>
@@ -41,6 +43,8 @@
         <hr>
 
         <p>
+            <!-- when using multiple checkboxes the value can be an array -->
+            <!-- checking a box will add the value to the array -->
             <label for="">
                 <input type="checkbox" v-model="shoppingList" value="milk">
                 Milk
@@ -78,14 +82,21 @@
 
         <hr>
 
-        <select>
-            <option value="">Assignee</option>
-            <option>Item 1</option>
-            <option>Item 2</option>
+        <select v-model="assigneeId">
+            <option value="">Select a user</option>
+            <option v-for="user in users" v-bind:value="user.id">
+                {{ user.name }}
+            </option>
         </select>
+
+        <p>
+            Assigned to (ID): {{ assigneeId }}
+        </p>
 
         <hr>
 
+        <!-- v-model also supports modifiers -->
+        <!-- https://vuejs.org/guide/components/v-model#handling-v-model-modifiers -->
         <textarea v-model.lazy.trim="note"></textarea>
 
         <p style="white-space: pre-line;">
@@ -98,7 +109,7 @@
         <p>
             <input type="number" v-model.number="price">
         </p>
-        {{ price + shippingPrice}}
+        {{ price + shippingPrice }}
 
     </div>
 
@@ -130,30 +141,40 @@
                     user.password = ''
                 }
 
-                //
+                // autoplay for single checkbox
 
                 const autoplay = ref(false)
 
-                //
+                // shopping list for multiple checkboxes
 
                 const shoppingList = ref([])
 
-                //
+                // gender for single radio button
 
                 const gender = ref()
 
-                //
+                // users and assigneeId for select input
+                // - where assigneeId is the selected user
+                // - users is the list of users to choose from
+                const assigneeId = ref('')
+                const users = ref([
+                    { id: 1, name: 'John Doe' },
+                    { id: 2, name: 'Jane Doe' },
+                    { id: 3, name: 'John Smith' },
+                    { id: 4, name: 'Jane Smith' },
+                ])
+
+
+                // note for textarea
 
                 const note = ref('')
 
-                //
+                // shipping price for number input
                 const shippingPrice = 1500
                 const price = ref(0)
 
                 return {
                     signIn,
-                    // email,
-                    //password,
                     user,
                     //
                     autoplay,
@@ -161,6 +182,9 @@
                     shoppingList,
                     //
                     gender,
+                    //
+                    assigneeId,
+                    users,
                     //
                     note,
                     //

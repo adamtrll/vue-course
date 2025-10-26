@@ -25,6 +25,7 @@
         <hr>
 
         <p>
+            <!-- call custom function when user clicks on the link -->
             <a href="#" v-on:click="showAlert('Custom message')">
                 Show alert
             </a>
@@ -69,7 +70,7 @@
 
                 return {
                     clicked,
-                    //
+                    // functions have to be returned to be used in the template
                     showAlert,
                     //
                     count,

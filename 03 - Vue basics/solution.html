@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue progress</title>
+
+    <style>
+        .progress-container {
+            width: 500px;
+            height: 20px;
+            margin: 2rem auto;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            border-radius: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            font-family: monospace;
+            font-weight: medium;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="progress-container">
+            <div class="progress" :style="{ width: progress + '%', backgroundColor: progressColor }">
+                <template v-if="progress > 5">
+                    {{ progress }}%
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref, onMounted, computed } = Vue
+
+        const app = createApp({
+            setup() {
+                const progress = ref(0)
+
+                const incrementProgress = () => {
+                    setTimeout(() => {
+                        progress.value++
+                        if (progress.value < 100) {
+                            incrementProgress()
+                        }
+                    }, 100)
+                }
+
+                onMounted(() => {
+                    incrementProgress()
+                })
+
+                const colors = ['tomato', 'orange', 'green']
+
+                const progressColor = computed(() => {
+                    if (progress.value < 50) {
+                        return colors[0]
+                    } else if (progress.value < 100) {
+                        return colors[1]
+                    } else {
+                        return colors[2]
+                    }
+                })
+
+                return {
+                    progress,
+                    progressColor,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>

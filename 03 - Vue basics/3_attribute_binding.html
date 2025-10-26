@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue attribute binding</title>
+
+    <style>
+        article.read {
+            opacity: 0.6;
+        }
+
+        textarea {
+            border: 2px solid #333;
+        }
+
+        .warning {
+            border: 2px solid orange;
+        }
+
+        .error {
+            border: 2px solid tomato;
+        }
+
+        .box-container {
+            margin: 2rem auto;
+            width: 200px;
+            height: 200px;
+            background-color: slategray;
+        }
+
+        .box {
+            background: yellow;
+
+            transition: 400ms ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <p>
+            <!-- <a href="{{url}}"> won't work -->
+            <!-- :href is a shorthand for v-bind:href -->
+            <a v-bind:href="url" target="_blank">
+                Google
+            </a>
+        </p>
+
+        <hr>
+
+        <!-- classes can be bound as an object where every property is a class name and the value is a boolean
+                - if the value is true, the class is added to the element
+                - if the value is false, the class is removed from the element
+        -->
+        <article v-for="article in articles" :class="{ read: article.read === true }">
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.description }}</p>
+            <!-- any html attribute can be bound with v-bind -->
+            <button @click="article.read = true" :disabled="article.read === true">
+                Mark as read
+            </button>
+        </article>
+
+        <hr>
+
+        <!-- attributes can be bound based on method results or preferably computed properties  -->
+        <textarea v-model="note" :class="noteClasses"></textarea>
+        <p>
+            {{ note.length }}
+        </p>
+
+        <hr>
+
+        <!-- style can be bound as an object where every property is a style name and the value is a value -->
+        <!-- the value can be a string, a number, a boolean, or a computed property -->
+        <!-- mutli-word properties can be written in camelCase or kebab-case enclosed in quotes
+                (e.g. backgroundColor: 'red' or 'background-color': 'red')
+        -->
+        <div class="box-container">
+            <div class="box" :style="{ width: width + 'px', height: height + 'px' }"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue
+
+        const app = createApp({
+            setup() {
+                const url = ref('https://www.google.com')
+
+                const articles = ref([
+                    {
+                        title: 'Article 1',
+                        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
+                        read: false,
+                    },
+                    {
+                        title: 'Article 2',
+                        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
+                        read: false,
+                    },
+                    {
+                        title: 'Article 3',
+                        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
+                        read: false,
+                    },
+                ])
+
+                const note = ref('')
+
+                const noteClasses = computed(() => {
+                    return {
+                        'warning': note.value.length > 50 && note.value.length < 100,
+                        'error': note.value.length >= 100,
+                    }
+                })
+
+                const width = ref(100)
+                const height = ref(100)
+
+                onMounted(() => {
+
+                    setInterval(() => {
+                        const size = Math.round((Math.random() * 200)) + 1
+
+                        if (Math.round(Math.random())) {
+                            width.value = size
+                        } else {
+                            height.value = size
+                        }
+                    }, 1000)
+
+                })
+
+                return {
+                    url,
+                    //
+                    articles,
+                    //
+                    note,
+                    noteClasses,
+                    //
+                    height,
+                    width,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue computed properties</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <input type="text" v-model="message">
+        <p>
+            {{ message }}
+        </p>
+        <p>
+            Computed:{{ reversedMessage }}
+        </p>
+        <p>
+            Method: {{ reversedMessageFunction() }}
+        </p>
+        <p>
+            {{ count }}
+        </p>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        // Destructing createApp and ref, computed and onMounted from Vue object
+        const { createApp, ref, computed, onMounted } = Vue
+
+        const app = createApp({
+            setup() {
+                const message = ref('')
+
+                // computed property to created calculated values based on another reactive value
+                // value will be cached and only recalculated when the dependent value changes
+                const reversedMessage = computed(() => {
+                    console.log('computed')
+                    return message.value.split('').reverse().join('')
+                })
+
+                // method can be used to create the same behavior but the value will not be cached
+                // and will be recalculated every time it is called
+                // to see the difference, check the console and see 'method' every time `count` is incremented
+                const reversedMessageFunction = () => {
+                    console.log('method')
+                    return message.value.split('').reverse().join('')
+                }
+
+                // count is here to demonstrate the difference between computed and method
+                const count = ref(0)
+
+                onMounted(() => {
+                    setInterval(() => {
+                        count.value++
+                    }, 1000)
+                })
+
+                return {
+                    message,
+                    reversedMessage,
+                    reversedMessageFunction,
+                    //
+                    count,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
