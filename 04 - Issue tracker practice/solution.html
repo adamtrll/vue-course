@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue issue trackker</title>
+
+    <style>
+        .is-invalid {
+            color: tomato;
+        }
+
+        .is-invalid input,
+        .is-invalid textarea {
+            border-color: tomato;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <form @submit.prevent="createIssue">
+            <div :class="{ 'is-invalid': errors.title }">
+                <label for="title">Title</label>
+                <input type="text" id="title" v-model="form.title">
+                <p v-if="errors.title">{{ errors.title }}</p>
+            </div>
+            <div>
+                <label for="labels">Labels</label>
+                <div>
+                    <label v-for="label in labels" :key="label.id" :style="{ backgroundColor: label.color }"
+                        style="color: white;">
+                        <input type="checkbox" id="labels" :value="label.id" v-model="form.labels" />
+                        {{ label.name }}
+                    </label>
+                </div>
+            </div>
+            <div :class="{ 'is-invalid': errors.title }">
+                <label for="description">Description</label>
+                <textarea id="description" v-model="form.description"></textarea>
+                <p v-if="errors.description">{{ errors.description }}</p>
+            </div>
+            <div>
+                <button>
+                    Create issue
+                </button>
+            </div>
+
+        </form>
+
+        <hr>
+
+        <div v-for="issue in list" :key="issue.id" :style="{ opacity: issue.resolved ? 0.6 : 1 }">
+            <h5>
+                <input type="checkbox" v-model="issue.resolved" />
+                {{ issue.title }}
+            </h5>
+            <div>
+                <span v-for="id in issue.labels" :key="id" :style="{ backgroundColor: getLabelColorById(id) }"
+                    style="color: white;">
+                    {{ getLabelNameById(id) }}
+                </span>
+            </div>
+            <button>
+                Show details
+            </button>
+            <p v-if="false">
+                {{ issue.description }}
+            </p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref, reactive } = Vue
+
+        const app = createApp({
+            setup() {
+
+                const labels = [
+                    { id: 1, name: 'Bug', color: '#8b2424' },
+                    { id: 2, name: 'Duplicate', color: '#2c2c2c' },
+                    { id: 3, name: 'Feature', color: '#4c1eca' },
+                    { id: 4, name: 'Question', color: '#df339d' },
+                    { id: 5, name: 'Wontfix', color: '#000000' },
+                ]
+
+                const errors = reactive({
+                    title: '',
+                    description: '',
+                })
+
+                const form = reactive({
+                    title: '',
+                    labels: [],
+                    description: '',
+                })
+
+                let maxId = 3;
+                const list = ref([
+                    { id: 1, title: 'Test', description: 'Test description', labels: [1, 3], resolved: false },
+                    { id: 2, title: 'Test 2', description: 'Test description 2', labels: [2, 4], resolved: true },
+                    { id: 3, title: 'Test 3', description: 'Test description 3', labels: [], resolved: false },
+                ])
+
+                const createIssue = () => {
+                    errors.title = ''
+                    errors.description = ''
+
+                    if (!form.title.length) {
+                        errors.title = 'Title is required'
+                    } else if (form.title.length < 5) {
+                        errors.title = 'Title must be at least 5 characters long'
+                    }
+
+                    if (!form.description.length) {
+                        errors.description = 'Description is required'
+                    } else if (form.description.length > 300) {
+                        errors.description = 'Description must not exceed 300 characters'
+                    }
+
+                    if (errors.title || errors.description)
+                        return
+
+                    list.value.push({
+                        id: ++maxId,
+                        title: form.title,
+                        description: form.description,
+                        labels: form.labels,
+                        resolved: false,
+                    })
+
+                    form.title = ''
+                    form.description = ''
+                    form.labels = []
+                }
+
+                const getLabelNameById = (id) => {
+                    return labels.find(label => label.id === id)?.name
+                }
+
+                const getLabelColorById = (id) => {
+                    return labels.find(label => label.id === id)?.color
+                }
+
+                return {
+                    labels,
+                    form,
+                    list,
+                    errors,
+                    createIssue,
+                    getLabelNameById,
+                    getLabelColorById,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
