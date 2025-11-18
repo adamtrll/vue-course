@@ -1,4 +1,5 @@
 <script setup>
+// Import required Vue functions
 import { ref, onMounted } from 'vue'
 import AppPostItem from '@/components/AppPostItem.vue'
 
@@ -24,6 +25,7 @@ onMounted(() => {
     <div>
         <div v-if="loading">Loading...</div>
         <div v-else class="app-post-list">
+            <!-- Pass down props to the child component with attribute binding :post="post" -->
             <app-post-item v-for="post in posts" :post="post" :key="post.id" />
         </div>
     </div>
