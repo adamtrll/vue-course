@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue component intro</title>
+</head>
+
+<body>
+    <div id="app">
+        <app />
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        // Destructing createApp and ref from Vue object
+        const { createApp, ref } = Vue
+
+        const AppHello = {
+            setup() { },
+            template: `
+                <h1>Hello</h1>
+            `
+        }
+
+        const AppPost = {
+            setup() {
+                const post = ref({
+                    title: 'Post Title',
+                    body: 'Post Body',
+                })
+
+                return {
+                    post,
+                }
+            },
+            template: `
+                <article>
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.body }}</p>
+                </artile>
+                <app-hello />
+            `
+        }
+
+        const App = {
+            components: {
+                AppPost,
+            },
+            setup() {
+                const title = ref('Main title')
+
+                return {
+                    title,
+                }
+            },
+            template: `
+                <h1>{{ title }}</h1>
+                <app-post />
+                <app-hello />
+            `
+        }
+
+        const app = createApp({
+            components: {
+                App,
+            },
+            setup() { },
+        })
+
+        app.component('app-hello', AppHello)
+
+        app.mount('#app')
+    </script>
+</body>
+
+</html>
