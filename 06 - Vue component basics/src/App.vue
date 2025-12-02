@@ -16,9 +16,12 @@ const selectedLang = ref('hu')
 </script>
 
 <template>
+    <!-- passing attributes withouth binding will be treated as static strings in the child component -->
     <AppNumber number="{ value: 10 }" />
     <AppNumber number="myNumber" />
+    <!-- v-bind must be used to pass reactive values to the child component -->
     <AppNumber v-bind:number="{ value: 8 }" />
+    <!-- : is a shorthand for v-bind: -->
     <AppNumber :number="myNumber" />
 
     <hr />
@@ -30,6 +33,7 @@ const selectedLang = ref('hu')
 
     <hr />
 
+    <!-- Listening to events from the child component -->
     <AppCounter :numbers="numbersForCounter" @updated="updateNumbers" />
 
     <hr />

@@ -10,11 +10,15 @@ const props = defineProps({
 
 const emit = defineEmits(['updated'])
 
+// Props are read-only, so we need to create a local copy to modify the value in the component
+// https://vuejs.org/guide/components/props#one-way-data-flow
 const localNumbers = ref(props.numbers)
 
 const increment = (idx) => {
+    // modify the local copy of the prop value
     localNumbers.value[idx]++
 
+    // trigger the updated event to notify the parent component about the change
     emit('updated', localNumbers.value)
 }
 </script>
