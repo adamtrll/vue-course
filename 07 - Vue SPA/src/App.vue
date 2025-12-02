@@ -1,11 +1,34 @@
-<script setup></script>
+<script setup>
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
+const authStore = useAuthStore()
+
+const router = useRouter()
+
+const signOut = () => {
+    authStore.signOut()
+
+    router.push({ name: 'home' })
+}
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+    <header>
+        <nav>
+            <RouterLink to="/">Home</RouterLink>
+            <RouterLink :to="{ name: 'about' }">About</RouterLink>
+            <RouterLink :to="{ name: 'account.profile' }">Profile</RouterLink>
+            <template v-if="authStore.isLoggedIn">
+                <a href="#" @click.prevent="signOut">Sign Out</a>
+            </template>
+        </nav>
+    </header>
+    <RouterView />
 </template>
 
-<style scoped></style>
+<style scoped>
+nav {
+    display: flex;
+    gap: 1rem;
+}
+</style>
