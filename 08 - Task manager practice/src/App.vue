@@ -26,11 +26,15 @@ const tasks = ref([
     },
 ])
 
-const handleCreated = (task) => {
+const handleCreate = (task) => {
     tasks.value.push({
         id: ++maxId,
         ...task,
     })
+}
+
+const handleDelete = (id) => {
+    tasks.value = tasks.value.filter((task) => task.id !== id)
 }
 
 onMounted(() => {
@@ -39,12 +43,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <AppForm
-        @created="handleCreated"
-        :assignees="assignees"
-        :loading="loading"
+    <AppForm @create="handleCreate" :assignees="assignees" :loading="loading" />
+    <AppList
+        v-if="!loading"
+        :tasks="tasks"
+        :users="assignees"
+        @delete="handleDelete"
     />
-    <AppList v-if="!loading" :tasks="tasks" :users="assignees" />
 </template>
 
 <style scoped></style>

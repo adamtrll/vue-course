@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const props = defineProps(['assignees', 'loading'])
 
-const emit = defineEmits(['created'])
+const emit = defineEmits(['create'])
 
 const form = ref({
     title: '',
@@ -50,7 +50,7 @@ const handleSubmit = () => {
         return
     }
 
-    emit('created', {
+    emit('create', {
         title: form.value.title,
         assignedTo: form.value.assignedTo,
         description: form.value.description,
